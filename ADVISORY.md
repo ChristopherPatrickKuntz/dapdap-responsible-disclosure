@@ -12,7 +12,7 @@
 
 ## Executive Summary
 
-During passive analysis of publicly accessible endpoints and JavaScript bundles on `dapdap.net`, CPK Solutions identified **unauthenticated Go pprof debug endpoints** on three backend API servers, exposing complete server memory profiles, internal source code paths, function names, dependency versions, and runtime state to the public internet without authentication.
+During passive analysis of publicly accessible endpoints and JavaScript bundles on `dapdap.net`, CPK Solutions identified **unauthenticated Go pprof debug endpoints** on three backend API servers, exposing heap allocation profiles, runtime traces, internal source code paths, function names, dependency versions, and runtime state to the public internet without authentication.
 
 Additionally, **three third-party API credentials** were identified in client-side JavaScript bundles, including a **verified-live Infura RPC key** responding on Ethereum mainnet and Optimism.
 
@@ -28,11 +28,11 @@ All findings were obtained exclusively through analysis of publicly accessible c
 |----------|--------|------------|
 | **Critical** | **High** | **Low** |
 
-**Validated:** Yes -- endpoints were accessed via standard unauthenticated HTTP GET requests; full heap dumps were returned and parsed.
+**Validated:** Yes -- endpoints were accessed via standard unauthenticated HTTP GET requests; heap allocation profiles were returned and parsed.
 
 ### Description
 
-Three backend API servers expose Go's `net/http/pprof` profiling endpoints to the public internet without any authentication. These endpoints return full server memory dumps, goroutine traces, allocation profiles, and thread creation data -- providing a complete x-ray of the server's internal architecture, source code structure, and runtime state.
+Three backend API servers expose Go's `net/http/pprof` profiling endpoints to the public internet without any authentication. These endpoints return heap allocation profiles, goroutine traces, and thread creation data -- providing a complete x-ray of the server's internal architecture, source code structure, and runtime state.
 
 | Host | Endpoint | Status |
 |------|----------|--------|
@@ -57,9 +57,9 @@ All server binaries were compiled from source under `/root/liuhy_projects/` on t
 
 All services are running as **root**.
 
-#### 2. Complete API Route Map
+#### 2. Handler Function Symbols
 
-Every HTTP handler function name is leaked via heap allocation traces, revealing the full API surface:
+Handler function symbols are visible in heap allocation traces, enabling reconstruction of likely API routes:
 
 **monad-backend (21 handlers):**
 
@@ -171,11 +171,11 @@ monad-backend-mainnet/
 
 The pprof endpoints provide an attacker with a complete reconnaissance package that would normally require source code access:
 
-1. **API surface mapping** -- Every handler function is named, enabling targeted fuzzing of all 28+ API routes
+1. **API surface mapping** -- Handler function symbols are visible, enabling reconstruction of likely API routes and targeted fuzzing of 28+ inferred endpoints
 2. **Dependency exploitation** -- Pinned versions allow immediate CVE lookup against all dependencies
 3. **Architecture understanding** -- The full DAO/service/handler layer separation, Redis locking patterns, and database query paths are visible, enabling targeted SQL injection or business logic attacks
-4. **Memory profiling** -- Repeated heap dumps reveal allocation patterns and can identify memory-based denial-of-service vectors
-5. **AWS role assumption** -- The cashback backend uses AWS STS, indicating IAM role access to additional AWS services
+4. **Memory profiling** -- Repeated heap allocation profiles reveal allocation patterns and can identify memory-based denial-of-service vectors
+5. **AWS role assumption** -- The cashback backend uses AWS STS, indicating IAM role access to additional AWS services, though no credentials were observed in profiling output
 
 **Note:** While this information dramatically lowers the barrier for targeted attacks, we did not identify direct credential exposure (e.g., database passwords, private keys) in the pprof output. The exposure is reconnaissance-grade information disclosure, not direct credential leakage.
 
