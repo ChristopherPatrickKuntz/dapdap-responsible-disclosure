@@ -43,7 +43,7 @@
 - [x] Submitted to vendor (2026-02-17)
 - [ ] Vendor acknowledgment received
 - [ ] Vendor remediation confirmed
-- [ ] Public disclosure
+- [x] Public disclosure (2026-05-18, 90-day period elapsed)
 
 ---
 
