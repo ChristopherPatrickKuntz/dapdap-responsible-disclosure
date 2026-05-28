@@ -1,6 +1,6 @@
 # DapDap Responsible Disclosure -- CPK-2026-004
 
-> **CONFIDENTIAL** -- This repository contains full technical details of unpatched vulnerabilities including exposed server profiling endpoints and client-side credential exposure. Do not share or publish until the disclosure deadline (2026-05-18) or vendor remediation, whichever comes first.
+> **Public disclosure** -- The 90-day coordinated disclosure period elapsed on 2026-05-18. This repository contains the full technical details of the exposed server profiling endpoints and client-side credential exposure findings as submitted to the vendor. Sensitive credentials have been redacted.
 
 ## Repository Structure
 
