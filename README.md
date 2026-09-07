@@ -2,6 +2,8 @@
 
 > **Public disclosure** -- The 90-day coordinated disclosure period elapsed on 2026-05-18. This repository contains the full technical details of the exposed server profiling endpoints and client-side credential exposure findings as submitted to the vendor. Sensitive credentials have been redacted.
 
+**Documentation updated:** 2026-09-07. The existing disclosure checklist does not record vendor acknowledgment or confirmed remediation. No newer vendor outcome is recorded in this README.
+
 ## Repository Structure
 
 ```
